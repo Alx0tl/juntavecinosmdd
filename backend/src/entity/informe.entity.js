@@ -27,6 +27,14 @@ export const informeEntity = new EntitySchema({
       default: () => "CURRENT_TIMESTAMP",
       onUpdate: "CURRENT_TIMESTAMP",
     },
+       estado: {
+      type: String,
+      default: "pendiente",
+    },
+    observaciones: {
+      type: String,
+      nullable: true,
+    },
   },
 });
 
