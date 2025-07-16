@@ -86,7 +86,7 @@ export async function login(req, res) {
       username: userFound.username,
       email: userFound.email,
       rut: userFound.rut,
-      rol: userFound.role,
+      role: userFound.role,
     };
     const accessToken = jwt.sign(payload, SESSION_SECRET, { expiresIn: "1d" });
 

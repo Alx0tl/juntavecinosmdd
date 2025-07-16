@@ -4,7 +4,7 @@ import { AppDataSource } from "../config/configDb.js";
 // Tesorero crea informe
 export async function crearInforme(req, res) {
   // Solo tesorero
-  if (req.user.role !== "tesorero") return res.status(403).json({ message: "Solo el tesorero puede crear informes" });
+  if (req.user.role !== "Tesorero") return res.status(403).json({ message: "Solo el tesorero puede crear informes" });
   const { title, content } = req.body;
   const informeRepo = AppDataSource.getRepository(Informe);
   const nuevoInforme = informeRepo.create({ title, content, estado: "pendiente" });
@@ -30,7 +30,7 @@ export async function dejarObservacion(req, res) {
 
 // Tesorero resuelve observación
 export async function resolverObservacion(req, res) {
-  if (req.user.role !== "tesorero") return res.status(403).json({ message: "Solo el tesorero puede resolver observaciones" });
+  if (req.user.role !== "Tesorero") return res.status(403).json({ message: "Solo el tesorero puede resolver observaciones" });
   const { id } = req.params;
   const informeRepo = AppDataSource.getRepository(Informe);
   const informe = await informeRepo.findOne({ where: { id } });
