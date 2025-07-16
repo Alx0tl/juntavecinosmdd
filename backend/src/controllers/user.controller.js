@@ -113,3 +113,34 @@ export async function getProfile(req, res) {
     res.status(500).json({ message: "Error interno del servidor"})
   }
 }
+
+export async function createUser(req, res) {
+  try {
+    const userRepository = AppDataSource.getRepository("User");
+    const { username, rut, email, password, role } = req.body;
+
+    if (!username || !rut || !email || !password || !role) {
+      return res.status(400).json({ message: "Faltan campos requeridos." });
+    }
+
+    const existingUser = await userRepository.findOne({ where: [{ email }, { rut }, { username }] });
+    if (existingUser) {
+      return res.status(409).json({ message: "Ya existe un usuario con ese email, RUT o nombre de usuario." });
+    }
+
+    const newUser = userRepository.create({
+      username,
+      rut,
+      email,
+      password,
+      role
+    });
+
+    await userRepository.save(newUser);
+
+    res.status(201).json({ message: "Usuario creado correctamente.", data: newUser });
+  } catch (error) {
+    console.error("Error en user.controller.js -> createUser(): ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
+}

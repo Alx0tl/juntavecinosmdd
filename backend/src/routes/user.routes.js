@@ -1,8 +1,8 @@
 "use strict";
 import { Router } from "express";
-import { getUsers, getUserById, getProfile, updateUserById, deleteUserById } from "../controllers/user.controller.js";
+import { getUsers, getUserById, getProfile, updateUserById, deleteUserById, createUser } from "../controllers/user.controller.js";
 import { authenticateJwt } from "../middleware/authentication.middleware.js";
-import { isAdmin } from "../middleware/authorization.middleware.js";
+import { isAdminOrSecretario } from "../middleware/authorization.middleware.js";
 
 const router = Router();
 
@@ -13,7 +13,10 @@ router.use(authenticateJwt);
 router.get("/profile", getProfile);
 
 // Middleware para verificar si el usuario es administrador
-router.use(isAdmin);
+router.use(isAdminOrSecretario);
+
+// Ruta para crear usuario (POST)
+router.post("/", createUser);
 
 // Rutas para obtener usuarios
 router.get("/", getUsers);
