@@ -41,6 +41,28 @@ export async function resolverObservacion(req, res) {
   res.status(200).json({ message: "Observación resuelta", data: informe });
 }
 
+// Tesorero edita informe
+export async function editarInforme(req, res) {
+  if (req.user.role !== "Tesorero") return res.status(403).json({ message: "Solo el tesorero puede editar informes" });
+  const { id } = req.params;
+  const { title, content } = req.body;
+  const informeRepo = AppDataSource.getRepository(Informe);
+  const informe = await informeRepo.findOne({ where: { id } });
+  if (!informe) return res.status(404).json({ message: "Informe no encontrado" });
+  if (informe.estado !== "pendiente" && informe.estado !== "observado") {
+    return res.status(400).json({ message: "Solo se pueden editar informes pendientes u observados" });
+  }
+  informe.title = title || informe.title;
+  informe.content = content || informe.content;
+  // Si el informe estaba observado, al editarlo pasa a pendiente y se eliminan observaciones
+  if (informe.estado === "observado") {
+    informe.estado = "pendiente";
+    informe.observaciones = null;
+  }
+  await informeRepo.save(informe);
+  res.status(200).json({ message: "Informe editado", data: informe });
+}
+
 // Presidente aprueba informe
 export async function aprobarInforme(req, res) {
   if (req.user.role !== "Presidente") return res.status(403).json({ message: "Solo el presidente puede aprobar informes" });
