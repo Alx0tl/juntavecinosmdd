@@ -17,21 +17,21 @@ export async function createUsers() {
                 username: "Presidente",
                 rut: "12345678-9",
                 email: "presi@gmail.com",
-                password: await encryptPassword("presi123"),
+                password: await encryptPassword("presidente123"),
                 role: "Presidente"
             },
              {
                 username: "Tesorero",
                 rut: "11223456-7",
                 email: "tes@gmail.com",
-                password: await encryptPassword("tes123"),
+                password: await encryptPassword("tesorero123"),
                 role: "tesorero"
             },
              {
                 username: "Secretario",
                 rut: "15345678-9",
                 email: "sec@gmail.com",
-                password: await encryptPassword("sec123"),
+                password: await encryptPassword("secretario123"),
                 role: "Secretario"
             },
             {
