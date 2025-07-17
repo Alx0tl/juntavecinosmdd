@@ -38,19 +38,6 @@ export async function dejarObservacion(req, res) {
   res.status(200).json({ message: "Observación agregada", data: informe });
 }
 
-// Tesorero resuelve observación
-export async function resolverObservacion(req, res) {
-  if (req.user.role !== "Tesorero") return res.status(403).json({ message: "Solo el tesorero puede resolver observaciones" });
-  const { id } = req.params;
-  const informeRepo = AppDataSource.getRepository(Informe);
-  const informe = await informeRepo.findOne({ where: { id } });
-  if (!informe) return res.status(404).json({ message: "Informe no encontrado" });
-  informe.observaciones = null;
-  informe.estado = "pendiente";
-  await informeRepo.save(informe);
-  res.status(200).json({ message: "Observación resuelta", data: informe });
-}
-
 // Tesorero edita informe
 export async function editarInforme(req, res) {
   if (req.user.role !== "Tesorero") return res.status(403).json({ message: "Solo el tesorero puede editar informes" });
