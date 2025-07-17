@@ -12,6 +12,16 @@ export async function crearInforme(req, res) {
   res.status(201).json({ message: "Informe creado", data: nuevoInforme });
 }
 
+export async function getInformes(req, res) {
+  // Permitir solo presidente, tesorero y secretario
+  if (!["Presidente", "Tesorero", "Secretario"].includes(req.user.role)) {
+    return res.status(403).json({ message: "No tienes permiso para ver los informes" });
+  }
+  const informeRepo = AppDataSource.getRepository(Informe);
+  const informes = await informeRepo.find();
+  res.status(200).json({ message: "Informes encontrados", data: informes });
+}
+
 // Presidente deja observación
 export async function dejarObservacion(req, res) {
   // Solo presidente
