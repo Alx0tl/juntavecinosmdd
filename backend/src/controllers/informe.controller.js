@@ -4,28 +4,34 @@ import { AppDataSource } from "../config/configDb.js";
 // Tesorero crea informe
 export async function crearInforme(req, res) {
   // Solo tesorero
-  if (req.user.role !== "Tesorero") return res.status(403).json({ message: "Solo el tesorero puede crear informes" });
+  try {
   const { title, content } = req.body;
   const informeRepo = AppDataSource.getRepository(Informe);
   const nuevoInforme = informeRepo.create({ title, content, estado: "pendiente" });
   await informeRepo.save(nuevoInforme);
   res.status(201).json({ message: "Informe creado", data: nuevoInforme });
+  } catch (error) {
+    console.error("Error en informe.controller.js -> crearInforme(): ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
 }
 
 export async function getInformes(req, res) {
   // Permitir solo presidente, tesorero y secretario
-  if (!["Presidente", "Tesorero", "Secretario"].includes(req.user.role)) {
-    return res.status(403).json({ message: "No tienes permiso para ver los informes" });
-  }
+  try {
   const informeRepo = AppDataSource.getRepository(Informe);
   const informes = await informeRepo.find();
   res.status(200).json({ message: "Informes encontrados", data: informes });
+  } catch (error) {
+    console.error("Error en informe.controller.js -> getInformes(): ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
 }
 
 // Presidente deja observación
 export async function dejarObservacion(req, res) {
   // Solo presidente
-  if (req.user.role !== "Presidente") return res.status(403).json({ message: "Solo el presidente puede dejar observaciones" });
+  try {
   const { id } = req.params;
   const { observacion } = req.body;
   const informeRepo = AppDataSource.getRepository(Informe);
@@ -34,13 +40,17 @@ export async function dejarObservacion(req, res) {
   informe.observaciones = observacion;
   informe.estado = "observado";
   await informeRepo.save(informe);
-  // Aquí podrías notificar al tesorero
+  // Notificacion tesorero
   res.status(200).json({ message: "Observación agregada", data: informe });
+  } catch (error) {
+    console.error("Error en informe.controller.js -> dejarObservacion(): ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
 }
 
 // Tesorero edita informe
 export async function editarInforme(req, res) {
-  if (req.user.role !== "Tesorero") return res.status(403).json({ message: "Solo el tesorero puede editar informes" });
+  try {
   const { id } = req.params;
   const { title, content } = req.body;
   const informeRepo = AppDataSource.getRepository(Informe);
@@ -58,11 +68,15 @@ export async function editarInforme(req, res) {
   }
   await informeRepo.save(informe);
   res.status(200).json({ message: "Informe editado", data: informe });
+  } catch (error) {
+    console.error("Error en informe.controller.js -> editarInforme(): ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
 }
 
 // Presidente aprueba informe
 export async function aprobarInforme(req, res) {
-  if (req.user.role !== "Presidente") return res.status(403).json({ message: "Solo el presidente puede aprobar informes" });
+  try {
   const { id } = req.params;
   const informeRepo = AppDataSource.getRepository(Informe);
   const informe = await informeRepo.findOne({ where: { id } });
@@ -71,4 +85,8 @@ export async function aprobarInforme(req, res) {
   informe.estado = "aprobado";
   await informeRepo.save(informe);
   res.status(200).json({ message: "Informe aprobado", data: informe });
+  } catch (error) {
+    console.error("Error en informe.controller.js -> aprobarInforme(): ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
 }
