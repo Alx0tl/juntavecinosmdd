@@ -77,8 +77,8 @@ const LoginRegisterForm = ({ mode = "login", onSubmit, loginError}) => {
             {...register("email", {
               required: "El correo es obligatorio",
               minLength: {
-                value: 15,
-                message: "El correo debe tener al menos 15 caracteres",
+                value: 10,
+                message: "El correo debe tener al menos 10 caracteres",
               },
               maxLength: {
                 value: 50,

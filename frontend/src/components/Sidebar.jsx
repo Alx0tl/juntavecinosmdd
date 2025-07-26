@@ -8,7 +8,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const user = JSON.parse(sessionStorage.getItem("usuario")) || "";
-  const userRole = user?.rol;
+  const userRole = user?.role;
 
   const logoutSubmit = () => {
     try {
@@ -29,7 +29,12 @@ const Sidebar = () => {
               <FaHome className="icon"/> Inicio
             </NavLink>
           </li>
-          {userRole === "administrador" && (
+          <li>
+           <NavLink to="/informes">
+            <FaHome className="icon"/> Informes
+           </NavLink>
+          </li>
+          {userRole === "Presidente" && (
             <li>
               <NavLink to="/users">
                 <FaUsers className="icon"/> Usuarios

@@ -8,6 +8,7 @@ import Register from '@pages/Register'
 import Error404 from '@pages/Error404'
 import Users from '@pages/Users'
 import Profile from '@pages/Profile'
+import Informes from '@pages/Informes';
 import ProtectedRoute from '@components/ProtectedRoute'
 
 const router = createBrowserRouter([
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
       {
         path: "/users",
         element: (
-          <ProtectedRoute allowedRoles={["administrador"]}>
+          <ProtectedRoute allowedRoles={["Presidente"]}>
             <Users />
           </ProtectedRoute>
         ),
@@ -31,7 +32,15 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
-      }
+      },
+      {
+        path: "/informes",
+        element: (
+          <ProtectedRoute allowedRoles={["Presidente", "Tesorero", "Secretario"]}>
+            <Informes />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   {
