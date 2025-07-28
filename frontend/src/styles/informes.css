@@ -1,10 +1,10 @@
-/* Página */
+/* Estilos generales para la página de informes */
 .informes-page {
   padding: 20px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Tabla */
+/* Configuración de la tabla principal de informes */
 .informes-table {
   width: 100%;
   border-collapse: collapse;
@@ -15,6 +15,7 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 
+/* Espaciado y bordes para las celdas de la tabla */
 .informes-table th,
 .informes-table td {
   padding: 14px 12px;
@@ -22,6 +23,7 @@
   text-align: left;
 }
 
+/* Encabezado de la tabla: fondo oscuro y texto blanco */
 .informes-table th {
   background: #333;
   color: #fff;
@@ -29,73 +31,88 @@
   font-weight: 600;
 }
 
+/* Filas de la tabla: tamaño de fuente y transición para hover */
 .informes-table tr {
   font-size: 1rem;
   transition: background 0.2s;
 }
 
+/* Efecto al pasar el mouse sobre una fila */
 .informes-table tr:hover td {
   background: #fff9c4;
   color: #222;
 }
 
+/* Colores alternados para filas impares y pares */
 .informes-table tr:nth-child(odd) td {
   background: #f9f9f9;
 }
-
 .informes-table tr:nth-child(even) td {
   background: #fff;
 }
 
-/* Botones */
-.informes-table button {
-  padding: 6px 14px;
-  margin: 3px 4px;
+/* Botones de acción: editar (verde), eliminar (rojo), observación (amarillo) */
+button.edit, .informes-create-btn {
+  background-color: #4caf50;
   color: #fff;
   border: none;
   border-radius: 4px;
+  padding: 6px 14px;
   font-size: 1em;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
-  font-weight: 500;
 }
-
-.informes-table button.edit {
-  background-color: #4caf50;
-}
-.informes-table button.edit:hover {
+button.edit:hover, .informes-create-btn:hover {
   background-color: #388e3c;
 }
 
-.informes-table button.delete {
-  background-color: #f44336;
+button.delete {
+  background-color: #f44336 !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-.informes-table button.delete:hover {
-  background-color: #c62828;
+button.delete:hover {
+  background-color: #c62828 !important;
 }
 
-.informes-table button.observacion {
+button.observacion {
   background-color: #ffc107;
   color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 14px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-.informes-table button.observacion:hover {
+button.observacion:hover {
   background-color: #ffb300;
   color: #222;
 }
 
-.informes-table button.aprobar {
+/* Botón para aprobar (verde, igual que editar) */
+button.aprobar {
   background-color: #4caf50;
 }
-.informes-table button.aprobar:hover {
+button.aprobar:hover {
   background-color: #388e3c;
 }
 
-.informes-table button:disabled {
+/* Botones deshabilitados: opacidad y cursor */
+button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Inputs en edición */
+/* Inputs de texto en la tabla cuando se edita */
 .informes-table input[type="text"] {
   padding: 6px 8px;
   font-size: 1em;
@@ -105,10 +122,49 @@
   margin-bottom: 2px;
 }
 
-/* Responsive */
+/* Estilos para el modal de detalles y creación */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90vw;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+.modal-content textarea {
+  width: 100%;
+  min-height: 120px;
+  font-size: 1em;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #bdbdbd;
+  resize: vertical;
+  margin-bottom: 1em;
+}
+
+/* Ajustes responsivos para pantallas pequeñas */
 @media (max-width: 800px) {
   .informes-table th, .informes-table td {
     padding: 8px 4px;
     font-size: 0.95em;
   }
+}
+
+/* Margen inferior para el botón de crear informe */
+.informes-create-btn {
+  margin-bottom: 16px;
 }
