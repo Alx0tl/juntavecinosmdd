@@ -1,12 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
-import cookies from "js-cookie";
-
-const API_URL = "http://localhost:3000/api/informes";
+import { useEffect, useState } from "react";
+import { useInformes } from "@hooks/informes/useInformes.jsx";
+import useDeleteInforme from "@hooks/informes/useDeleteInforme.jsx";
+import useEditInforme from "@hooks/informes/useEditInforme.jsx";
+import "@styles/informes.css";
 
 const Informes = () => {
   const user = JSON.parse(sessionStorage.getItem("usuario")) || {};
   const userRole = user.role;
-  const [informes, setInformes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [editId, setEditId] = useState(null);
@@ -14,25 +14,17 @@ const Informes = () => {
   const [editContent, setEditContent] = useState("");
   const [obsId, setObsId] = useState(null);
   const [obsText, setObsText] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const getToken = () => cookies.get("jwt-auth");
-
-  // Fetch informes
-
-  const fetchInformes = useCallback(async () => {
-    try {
-      const res = await fetch(API_URL, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      const data = await res.json();
-      setInformes(data.data || []);
-    } catch {
-      alert("Error al cargar informes");
-    }
-  }, []);
+  const {
+    informes,
+    fetchInformes,
+    loading,
+    handleCrearInforme,
+    handleDejarObservacion,
+    handleAprobarInforme,
+  } = useInformes();
+  const { handleDeleteInforme } = useDeleteInforme(fetchInformes);
+  const { handleEditInforme } = useEditInforme(fetchInformes);
 
   useEffect(() => {
     fetchInformes();
@@ -49,30 +41,11 @@ const Informes = () => {
   }, [informes, userRole]);
 
   // Crear informe (solo tesorero)
-  const handleCrearInforme = async (e) => {
+  const onCrearInforme = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({ title, content }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || "Error al crear informe");
-      } else {
-        setTitle("");
-        setContent("");
-        fetchInformes();
-      }
-    } catch {
-      alert("Error al crear informe");
-    }
-    setLoading(false);
+    await handleCrearInforme(title, content);
+    setTitle("");
+    setContent("");
   };
 
   // Editar informe (solo tesorero)
@@ -82,30 +55,11 @@ const Informes = () => {
     setEditContent(informe.content);
   };
 
-  const handleEditarInforme = async (id) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({ title: editTitle, content: editContent }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || "Error al editar informe");
-      } else {
-        setEditId(null);
-        setEditTitle("");
-        setEditContent("");
-        fetchInformes();
-      }
-    } catch {
-      alert("Error al editar informe");
-    }
-    setLoading(false);
+  const onEditarInforme = async (id) => {
+    await handleEditInforme(id, editTitle, editContent);
+    setEditId(null);
+    setEditTitle("");
+    setEditContent("");
   };
 
   // Dejar observación (solo presidente)
@@ -114,58 +68,22 @@ const Informes = () => {
     setObsText("");
   };
 
-  const handleDejarObservacion = async (id) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/${id}/observacion`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify({ observacion: obsText }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || "Error al dejar observación");
-      } else {
-        setObsId(null);
-        setObsText("");
-        fetchInformes();
-      }
-    } catch {
-      alert("Error al dejar observación");
-    }
-    setLoading(false);
+  const onDejarObservacion = async (id) => {
+    await handleDejarObservacion(id, obsText);
+    setObsId(null);
+    setObsText("");
   };
 
   // Aprobar informe (solo presidente)
-  const handleAprobarInforme = async (id) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/${id}/aprobar`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.message || "Error al aprobar informe");
-      } else {
-        fetchInformes();
-      }
-    } catch {
-      alert("Error al aprobar informe");
-    }
-    setLoading(false);
+  const onAprobarInforme = async (id) => {
+    await handleAprobarInforme(id);
   };
 
   return (
-    <div>
+    <div className="informes-page">
       <h2>Informes Financieros</h2>
       {userRole === "Tesorero" && (
-        <form onSubmit={handleCrearInforme}>
+        <form onSubmit={onCrearInforme}>
           <input
             type="text"
             placeholder="Título"
@@ -187,14 +105,14 @@ const Informes = () => {
           </button>
         </form>
       )}
-      <table>
+      <table className="informes-table">
         <thead>
           <tr>
-            <th>Título</th>
-            <th>Contenido</th>
-            <th>Estado</th>
-            <th>Observaciones</th>
-            <th>Acciones</th>
+            <th className="text-left">Título</th>
+            <th className="text-left">Contenido</th>
+            <th className="text-left">Estado</th>
+            <th className="text-left">Observaciones</th>
+            <th className="text-left">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -230,7 +148,7 @@ const Informes = () => {
                   (editId === informe.id ? (
                     <>
                       <button
-                        onClick={() => handleEditarInforme(informe.id)}
+                        onClick={() => onEditarInforme(informe.id)}
                         disabled={loading}
                       >
                         Guardar
@@ -243,12 +161,22 @@ const Informes = () => {
                       </button>
                     </>
                   ) : (
-                    <button
-                      onClick={() => startEdit(informe)}
-                      disabled={loading}
-                    >
-                      Editar
-                    </button>
+                    <>
+                      <button
+                        className="edit"
+                        onClick={() => startEdit(informe)}
+                        disabled={loading}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="delete"
+                        onClick={() => handleDeleteInforme(informe.id)}
+                        disabled={loading}
+                      >
+                        Eliminar
+                      </button>
+                    </>
                   ))}
                 {userRole === "Presidente" &&
                   ["pendiente", "observado"].includes(informe.estado) &&
@@ -262,12 +190,14 @@ const Informes = () => {
                         disabled={loading}
                       />
                       <button
-                        onClick={() => handleDejarObservacion(informe.id)}
+                        className="edit" // Verde
+                        onClick={() => onDejarObservacion(informe.id)}
                         disabled={loading || !obsText}
                       >
                         Guardar
                       </button>
                       <button
+                        className="delete" // Rojo
                         onClick={() => setObsId(null)}
                         disabled={loading}
                       >
@@ -277,6 +207,7 @@ const Informes = () => {
                   ) : (
                     <>
                       <button
+                        className="observacion"
                         onClick={() => startObs(informe)}
                         disabled={loading}
                       >
@@ -284,7 +215,8 @@ const Informes = () => {
                       </button>
                       {!informe.observaciones && (
                         <button
-                          onClick={() => handleAprobarInforme(informe.id)}
+                          className="aprobar"
+                          onClick={() => onAprobarInforme(informe.id)}
                           disabled={loading}
                         >
                           Aprobar

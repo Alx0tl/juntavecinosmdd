@@ -16,6 +16,23 @@ export async function crearInforme(req, res) {
   }
 }
 
+// Tesorero elimina informe
+export async function deleteInforme(req, res) {
+  try {
+    const { id } = req.params;
+    const informeRepo = AppDataSource.getRepository(Informe);
+    const informe = await informeRepo.findOne({ where: { id } });
+    if (!informe) {
+      return res.status(404).json({ message: "Informe no encontrado" });
+    }
+    await informeRepo.remove(informe);
+    res.status(200).json({ message: "Informe eliminado correctamente" });
+  } catch (error) {
+    console.error("Error en informe.controller.js -> deleteInforme(): ", error);
+    res.status(500).json({ message: "Error interno del servidor." });
+  }
+}
+
 export async function getInformes(req, res) {
   // Permitir solo presidente, tesorero y secretario
   try {
