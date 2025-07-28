@@ -148,12 +148,14 @@ const Informes = () => {
                   (editId === informe.id ? (
                     <>
                       <button
+                        className="edit" // Verde
                         onClick={() => onEditarInforme(informe.id)}
                         disabled={loading}
                       >
                         Guardar
                       </button>
                       <button
+                        className="delete" // Rojo
                         onClick={() => setEditId(null)}
                         disabled={loading}
                       >

@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "@services/auth.service.js";
-import { FaHome, FaUsers, FaSignOutAlt } from "react-icons/fa";
+import { FaBook, FaHome, FaUsers, FaSignOutAlt } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import "@styles/Sidebar.css";
 
@@ -31,7 +31,7 @@ const Sidebar = () => {
           </li>
           <li>
            <NavLink to="/informes">
-            <FaHome className="icon"/> Informes
+            <FaBook className="icon"/> Informes
            </NavLink>
           </li>
           {userRole === "Presidente" && (
