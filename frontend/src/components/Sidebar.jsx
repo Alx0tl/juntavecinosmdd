@@ -38,7 +38,7 @@ const Sidebar = () => {
           {userRole === "Presidente" && (
             <li>
               <NavLink to="/users">
-                <FaUsers className="icon"/> Usuarios
+                <FaUsers className="icon"/> Miembros
               </NavLink>
             </li>
           )}
@@ -54,6 +54,11 @@ const Sidebar = () => {
                   <FaFileUpload className="icon"/> Actas
                 </NavLink>
               </li>
+              <li>
+              <NavLink to="/users">
+                <FaUsers className="icon"/> Miembros
+              </NavLink>
+            </li>
             </>
           )}
           <li>
