@@ -101,7 +101,6 @@ const Informes = () => {
           loading={loading}
           handleEditInforme={handleEditInforme}
           setEditId={setEditId}
-          setEditContent={setEditContent}
           setSelectedInforme={setSelectedInforme}
           setModalOpen={setModalOpen}
           handleDeleteInforme={handleDeleteInforme}

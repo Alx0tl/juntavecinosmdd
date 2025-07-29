@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "@services/auth.service.js";
 import { FaBook, FaHome, FaUsers, FaSignOutAlt } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
+import { FaCalendarPlus, FaFileUpload } from "react-icons/fa";
 import "@styles/Sidebar.css";
 
 const Sidebar = () => {
@@ -40,6 +41,20 @@ const Sidebar = () => {
                 <FaUsers className="icon"/> Usuarios
               </NavLink>
             </li>
+          )}
+          {userRole === "Secretario" && (
+            <>
+              <li>
+                <NavLink to="/agendar">
+                  <FaCalendarPlus className="icon"/> Asamblea
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/actas">
+                  <FaFileUpload className="icon"/> Actas
+                </NavLink>
+              </li>
+            </>
           )}
           <li>
             <NavLink to="/profile">

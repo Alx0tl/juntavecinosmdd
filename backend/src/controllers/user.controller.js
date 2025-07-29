@@ -1,6 +1,7 @@
 "use strict";
 import User from "../entity/user.entity.js";
 import { AppDataSource } from "../config/configDb.js";
+import { encryptPassword } from "../helpers/bcrypt.helper.js";
 
 export async function getUsers(req, res) {
   try {
@@ -128,11 +129,13 @@ export async function createUser(req, res) {
       return res.status(409).json({ message: "Ya existe un usuario con ese email, RUT o nombre de usuario." });
     }
 
+    const hashedPassword = await encryptPassword(password);
+
     const newUser = userRepository.create({
       username,
       rut,
       email,
-      password,
+      password: hashedPassword,
       role
     });
 
