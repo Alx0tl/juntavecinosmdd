@@ -2,6 +2,7 @@
 import User from "../entity/user.entity.js";
 import { AppDataSource } from "../config/configDb.js";
 import { encryptPassword } from "../helpers/bcrypt.helper.js";
+import { registerValidation } from "../validations/auth.validation.js";
 
 export async function getUsers(req, res) {
   try {
@@ -105,7 +106,8 @@ export async function getProfile(req, res) {
       username: user.username,
       email: user.email,
       rut: user.rut,
-      role: user.role
+      role: user.role,
+      direccion: user.direccion
     };
 
     res.status(200).json({ message: "Perfil encontrado: ", data: formattedUser });
@@ -117,8 +119,13 @@ export async function getProfile(req, res) {
 
 export async function createUser(req, res) {
   try {
+    const { error } = registerValidation.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.message });
+    }
+    
     const userRepository = AppDataSource.getRepository("User");
-    const { username, rut, email, password, role } = req.body;
+    const { username, rut, email, password, role, direccion } = req.body;
 
     if (!username || !rut || !email || !password || !role) {
       return res.status(400).json({ message: "Faltan campos requeridos." });
@@ -136,7 +143,8 @@ export async function createUser(req, res) {
       rut,
       email,
       password: hashedPassword,
-      role
+      role,
+      direccion
     });
 
     await userRepository.save(newUser);

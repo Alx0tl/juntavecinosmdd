@@ -34,6 +34,10 @@ export const UserEntity = new EntitySchema({
             type: String,
             default: "user",
         },
+        direccion: {
+            type: String,
+            nullable: true,
+        },
         createdAt: {
             type: "timestamp",
             default: () => "CURRENT_TIMESTAMP",

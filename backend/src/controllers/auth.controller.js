@@ -16,7 +16,7 @@ export async function register(req, res) {
   try {
     // Obtener el repositorio de usuarios y validar los datos de entrada
     const userRepository = AppDataSource.getRepository(User);
-    const { username, rut, email, password } = req.body;
+    const { username, rut, email, password,role,direccion } = req.body;
     const { error } = registerValidation.validate(req.body);
     if (error) return res.status(400).json({ message: error.message });
 
@@ -45,6 +45,8 @@ export async function register(req, res) {
       email,
       rut,
       password: await encryptPassword(password),
+      role,
+      direccion,
     });
     await userRepository.save(newUser);
 
@@ -88,6 +90,7 @@ export async function login(req, res) {
       email: userFound.email,
       rut: userFound.rut,
       role: userFound.role,
+      direccion: userFound.direccion,
     };
     const accessToken = jwt.sign(payload, SESSION_SECRET, { expiresIn: "1d" });
 

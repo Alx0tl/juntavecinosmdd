@@ -3,12 +3,13 @@ import useGetUsers from "@hooks/users/useGetUsers.jsx";
 import useDeleteUser from "@hooks/users/useDeleteUser.jsx";
 import useEditUser from "@hooks/users/useEditUser.jsx";
 import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
+import useAddUser from "@hooks/users/useAddUser.jsx";
 
 const Users = () => {
   const { users, fetchUsers } = useGetUsers();
   const { handleDeleteUser } = useDeleteUser(fetchUsers);
   const { handleEditUser } = useEditUser(fetchUsers);
+  const { handleAddUser } = useAddUser(fetchUsers);
 
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -38,6 +39,9 @@ const Users = () => {
           onChange={(e) => setSearch(e.target.value)}
           style={{ padding: "8px", fontSize: "1em", borderRadius: "4px", border: "1px solid #ccc" }}
         />
+        <button className="edit" onClick={handleAddUser}>
+          Añadir Miembro
+        </button>
         </div>
       <table className="users-table">
         <thead>
@@ -46,6 +50,7 @@ const Users = () => {
             <th>Correo</th>
             <th>Rol</th>
             <th>RUT</th>
+            <th>direccion</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -57,6 +62,7 @@ const Users = () => {
                 <td>{user.email}</td>
                 <td>{user.role}</td>
                 <td>{user.rut}</td>
+                <td>{user.direccion}</td>
                 <td>
                   <button className="edit" onClick={() => handleEditUser(user.id, user)}>Editar</button>
                   <button className="delete" onClick={() => handleDeleteUser(user.id)}>Eliminar</button>

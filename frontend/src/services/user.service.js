@@ -36,3 +36,13 @@ export async function getProfile() {
         throw error;
     }
 }
+
+export async function addUser(userData) {
+    try {
+        const response = await axios.post('/users', userData);
+        return response.data;
+    } catch (error) {
+        console.error("Error al añadir usuario:", error);
+        throw error;
+    }
+}
