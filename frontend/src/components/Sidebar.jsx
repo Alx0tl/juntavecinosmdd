@@ -36,11 +36,18 @@ const Sidebar = () => {
            </NavLink>
           </li>
           {userRole === "Presidente" && (
+            <>
             <li>
               <NavLink to="/users">
                 <FaUsers className="icon"/> Miembros
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/agendarjuntapres">
+                <FaCalendarPlus className="icon" /> Fechas Agendadas
+              </NavLink>
+            </li>
+            </>
           )}
           {userRole === "Secretario" && (
             <>

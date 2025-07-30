@@ -6,11 +6,18 @@ export const useGetUsers = () => {
     
     const fetchUsers = async () => {
         try {
-            const data = await getUsers();
-            dataLogged(data);
-            setUsers(data);
+            const response = await getUsers();
+
+            if (!Array.isArray(response)) {
+                console.warn("No se pudo cargar la lista de usuarios");
+                setUsers([]); // evita errores posteriores
+                return;
+            }
+
+            setUsers(response);
         } catch (error) {
-            console.error("Error consiguiendo usuarios:", error);
+            console.error("Error procesando datos de usuario:", error);
+            setUsers([]); // fallback
         }
     };
     

@@ -10,6 +10,7 @@ import Users from '@pages/Users'
 import Profile from '@pages/Profile'
 import Informes from '@pages/Informes';
 import AgendarJunta from '@pages/AgendarJunta';
+import AgendarJuntaPres from '@pages/AgendarJuntaPres';
 import Actas from '@pages/Actas';
 import ProtectedRoute from '@components/ProtectedRoute'
 
@@ -57,6 +58,14 @@ const router = createBrowserRouter([
           <ProtectedRoute allowedRoles={["Secretario"]}>
             <Actas />
           </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/agendarjuntapres",
+        element: (
+          <ProtectedRoute allowedRoles={["Presidente"]}>
+            <AgendarJuntaPres />
+        </ProtectedRoute>
         ),
       },
     ],

@@ -2,6 +2,29 @@
 import User from "../entity/user.entity.js";
 import { AppDataSource } from "../config/configDb.js";
 
+export async function isSecretarioOrPresidente(req, res, next) {
+  try {
+    console.log("ROL DETECTADO:", req.user?.rol);
+    const userRepository = AppDataSource.getRepository(User);
+    const userFound = await userRepository.findOneBy({
+      email: req.user?.email,
+    });
+
+    if (!userFound)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+
+    if (!["Presidente", "Secretario"].includes(userFound.role)) {
+      return res.status(403).json({
+        message: "Acceso restringido. Se requiere ser Presidente, o Secretario para esta acción.",
+      });
+    }
+
+    next();
+  } catch (error) {
+    res.status(500).json({ message: "Error interno del servidor", error });
+  }
+}
+
 // Middleware solo para secretario
 export async function isSecretario(req, res, next) {
   try {

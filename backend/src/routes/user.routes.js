@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { getUsers, getUserById, getProfile, updateUserById, deleteUserById, createUser } from "../controllers/user.controller.js";
 import { authenticateJwt } from "../middleware/authentication.middleware.js";
-import { isSecretario } from "../middleware/authorization.middleware.js";
+import { isSecretarioOrPresidente } from "../middleware/authorization.middleware.js";
 
 const router = Router();
 
@@ -12,8 +12,8 @@ router.use(authenticateJwt);
 // Rutas públicas
 router.get("/profile", getProfile);
 
-// Middleware para verificar si el usuario es secretario
-router.use(isSecretario);
+// Middleware para verificar si el usuario es secretario o presidente
+router.use(isSecretarioOrPresidente); 
 
 // Ruta para crear usuario (POST)
 router.post("/", createUser);
